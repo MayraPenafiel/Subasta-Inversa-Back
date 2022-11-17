@@ -36,6 +36,7 @@ public class ProveedorController {
                     Collections.singletonMap("Mensaje", "Este email ya esta en uso.")
             );
         }
+        
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(proveedorService.crear(proveedor));
     }

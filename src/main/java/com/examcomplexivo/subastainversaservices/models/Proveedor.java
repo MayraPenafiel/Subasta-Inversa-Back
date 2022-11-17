@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,5 +20,10 @@ public class Proveedor extends Persona {
     @JoinColumn(name = "id_usuario", unique = true)
     @OneToOne(cascade = CascadeType.ALL)
     private Usuario usuario;
+
+    @ManyToMany
+    @JoinTable(joinColumns = @JoinColumn(name = "id_proveedor"),
+    inverseJoinColumns = @JoinColumn(name = "id_servicio"))
+    private List<Servicio> servicios = new ArrayList<>();
 
 }
