@@ -42,4 +42,8 @@ public class Subasta {
     @ManyToOne
     private Cliente cliente;
 
+    @JoinColumn(name = "id_servicio", referencedColumnName = "id_servicio")
+    @ManyToOne
+    private Servicio servicio;
+
 }
