@@ -18,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RestController
+@CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
+        RequestMethod.DELETE })
 @Controller
 @RequestMapping("/subasta")
 public class SubastaController {

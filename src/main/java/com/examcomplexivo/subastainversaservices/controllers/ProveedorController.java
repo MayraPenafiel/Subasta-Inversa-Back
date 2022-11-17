@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
+@CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
+        RequestMethod.DELETE })
 @RequestMapping("/proveedor")
 public class ProveedorController {
 
