@@ -1,0 +1,38 @@
+package com.examcomplexivo.subastainversaservices.services.proveedor;
+
+import com.examcomplexivo.subastainversaservices.models.Proveedor;
+import com.examcomplexivo.subastainversaservices.repositories.ProveedorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+@Service
+public class ProveedorServiceImp implements ProveedorService {
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Proveedor> listar() {
+        return (List<Proveedor>) proveedorRepository.findAll();
+    }
+
+    @Override
+    public Proveedor crear(Proveedor proveedor) {
+        return proveedorRepository.save(proveedor);
+    }
+
+    @Override
+    public Optional<Proveedor> findByEmail(String email) {
+        return proveedorRepository.findByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Proveedor> findById(Long id) {
+        return proveedorRepository.findById(id);
+    }
+}
