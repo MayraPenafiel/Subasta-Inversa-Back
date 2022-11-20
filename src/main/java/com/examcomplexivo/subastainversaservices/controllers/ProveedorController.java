@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
@@ -50,11 +52,32 @@ public class ProveedorController {
 
         Optional<Proveedor> optionalProveedor = proveedorService.findById(idProveedor);
         if(optionalProveedor.isPresent()){
-            Proveedor p = optionalProveedor.get();
-            return ResponseEntity.status(HttpStatus.CREATED).body(proveedorService.crear(p));
+
+            optionalProveedor.get().setNombre(proveedor.getNombre());
+            optionalProveedor.get().setApellido(proveedor.getApellido());
+            optionalProveedor.get().setEmail(proveedor.getEmail());
+            optionalProveedor.get().setTelefono(proveedor.getTelefono());
+            optionalProveedor.get().setDireccion(proveedor.getDireccion());
+            optionalProveedor.get().setAnios_experiencia(proveedor.getAnios_experiencia());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(proveedorService.crear(optionalProveedor.get()));
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/eliminar/{idProveedor}")
+    public ResponseEntity<?> eliminarServicio(@PathVariable(name = "idProveedor", required = true) Long idProveedor) {
+        try {
+            if (proveedorService.findById(idProveedor).isPresent()) {
+                proveedorService.eliminar(idProveedor);
+                return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Proveedor eliminado correctamente."));
+            } else {
+                return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "El proveedor no existe."));
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("mensaje", "No se pudo eliminar."));
+        }
     }
 
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {

@@ -11,67 +11,107 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
 
-//@RestController
+@RestController
+@CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
+        RequestMethod.DELETE })
+@RequestMapping("/oferta")
 public class OfertaController {
 
-//    @Autowired
-//    private OfertaService ofertaService;
-//
-//    @GetMapping
-//    public List<Oferta> listar(){
-//        return ofertaService.listar();
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<?> crear(@Valid @RequestBody Oferta oferta, BindingResult result){
+    @Autowired
+    private OfertaService ofertaService;
+
+    @GetMapping
+    public List<Oferta> listar(){
+        return ofertaService.listar();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> crear(@Valid @RequestBody Oferta oferta, BindingResult result){
+
+//        Optional<Oferta> ofertaBD = ofertaService.findById(oferta.getIdOferta());
 //        if(result.hasErrors()){
 //            return validar(result);
 //        }
-//        return  ResponseEntity.status(HttpStatus.CREATED).body(ofertaService.save(oferta));
-//    }
-//
-//    @GetMapping("{/id}") //Buscar por id
-//    public ResponseEntity<?> listarId(@PathVariable Long id){
-//        Optional<Oferta> ofertaOptional=ofertaService.findById(id);
-//        if (ofertaOptional.isPresent()) {
-//
-//            return ResponseEntity.ok(ofertaOptional.get());
+//        if (ofertaBD.isPresent()){
+//            return ResponseEntity.badRequest().body(
+//                    Collections.singletonMap("Mensaje","Esta oferta ya fue registrada")
+//            );
 //        }
-//        return ResponseEntity.badRequest().body(
-//                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
-//        );
-//    }
-//
-//    @GetMapping("{/fecha}") //Buscar por fecha
-//    public ResponseEntity<?> listarFecha(@PathVariable Date fecha){
-//        Optional<Oferta> ofertaOptional=ofertaService.findByDate(fecha);
-//        if (ofertaOptional.isPresent()) {
-//
-//            return ResponseEntity.ok(ofertaOptional.get());
-//        }
-//        return ResponseEntity.badRequest().body(
-//                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
-//        );
-//    }
-//
-//    @GetMapping("{/estado}") //Buscar por id
-//    public ResponseEntity<?> listarEstado(@PathVariable Boolean estado){
-//        Optional<Oferta> ofertaOptional=ofertaService.findByEstado(estado);
-//        if (ofertaOptional.isPresent()) {
-//
-//            return ResponseEntity.ok(ofertaOptional.get());
-//        }
-//        return ResponseEntity.badRequest().body(
-//                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
-//        );
-//    }
-//    private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
-//        Map<String, String> errores = new HashMap<>();
-//        result.getFieldErrors().forEach(err -> {
-//            errores.put(err.getField(), "El campo" + err.getField()
-//                    + " " + err.getDefaultMessage());
-//        });
-//        return ResponseEntity.badRequest().body(errores);
-//    }
+        return  ResponseEntity.status(HttpStatus.CREATED).body(ofertaService.guardar(oferta));
+    }
+
+    @PutMapping("/editar/{idOferta}")
+    public ResponseEntity<?> editarOderta(@PathVariable(name = "idOferta", required = true)Long idOferta,
+                                          @RequestBody Oferta oferta){
+        try{
+            if (ofertaService.findById(idOferta).isPresent()){
+                oferta.setIdOferta(idOferta);
+                ofertaService.guardar(oferta);
+                return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Oferta modificada correctamente."));
+            }else {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("mensaje", "La oferta no existe."));
+            }
+        }catch (Exception ex){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/eliminar/{idOferta}")
+    public ResponseEntity<?> eliminarOferta (@PathVariable(name = "idOferta", required = true) Long idOferta){
+        try{
+            if (ofertaService.findById(idOferta).isPresent()){
+                ofertaService.eliminar(idOferta);
+                return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Oferta eliminada correctamente."));
+            }else {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("mensaje", "La oferta no existe."));
+            }
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("mensaje", "No se pudo eliminar."));
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> listarId(@PathVariable Long id){
+        Optional<Oferta> ofertaOptional=ofertaService.findById(id);
+        if (ofertaOptional.isPresent()) {
+
+            return ResponseEntity.ok(ofertaOptional.get());
+        }
+        return ResponseEntity.badRequest().body(
+                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
+        );
+    }
+
+    @GetMapping("{fecha}") //Buscar por fecha
+    public ResponseEntity<?> listarFecha(@PathVariable Date fecha){
+        Optional<Oferta> ofertaOptional=ofertaService.findByFecha(fecha);
+        if (ofertaOptional.isPresent()) {
+
+            return ResponseEntity.ok(ofertaOptional.get());
+        }
+        return ResponseEntity.badRequest().body(
+                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
+        );
+    }
+
+    @GetMapping("{estado}")
+    public ResponseEntity<?> listarEstado(@PathVariable Boolean estado){
+        Optional<Oferta> ofertaOptional=ofertaService.findByEstado(estado);
+        if (ofertaOptional.isPresent()) {
+
+            return ResponseEntity.ok(ofertaOptional.get());
+        }
+        return ResponseEntity.badRequest().body(
+                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
+        );
+    }
+    private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
+        Map<String, String> errores = new HashMap<>();
+        result.getFieldErrors().forEach(err -> {
+            errores.put(err.getField(), "El campo" + err.getField()
+                    + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errores);
+    }
 
 }

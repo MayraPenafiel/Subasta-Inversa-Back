@@ -37,6 +37,6 @@ public class ServicioServiceImp implements ServicioService{
 
     @Override
     public void eliminar(Long id) {
-        repository.findById(id);
+        repository.deleteById(id);
     }
 }

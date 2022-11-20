@@ -14,4 +14,6 @@ public interface ProveedorService {
     Optional<Proveedor> findByEmail(String email);
 
     Optional<Proveedor> findById(Long id);
+
+    void eliminar (Long id);
 }

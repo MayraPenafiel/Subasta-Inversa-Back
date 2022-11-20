@@ -52,7 +52,7 @@ public class SubastaController {
                 subastaService.guardar(subasta);
                 return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Subasta modificada correctamente."));
             }else{
-                return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "La subasta no existe."));
+                return ResponseEntity.badRequest().body(Collections.singletonMap("mensaje", "La subasta no existe."));
             }
         }catch(Exception ex){
             Logger.getLogger(SubastaController.class.getName()).log(Level.SEVERE,"NO SE PUDO EDITAR");
@@ -67,7 +67,7 @@ public class SubastaController {
                 subastaService.eliminar(Long.parseLong(idSubasta));
                 return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Subasta eliminada correctamente."));
             }else{
-                return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "La subasta no existe."));
+                return ResponseEntity.badRequest().body(Collections.singletonMap("mensaje", "La subasta no existe."));
             }
         }catch(Exception ex){
             Logger.getLogger(SubastaController.class.getName()).log(Level.SEVERE, "NO SE PUDO ELIMINAR");

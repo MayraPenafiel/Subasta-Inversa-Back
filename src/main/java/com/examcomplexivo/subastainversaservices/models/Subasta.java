@@ -7,7 +7,6 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
@@ -37,6 +36,7 @@ public class Subasta {
 
     @Column(name = "img_subasta")
     private String imgSubasta;
+
 
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     @ManyToOne

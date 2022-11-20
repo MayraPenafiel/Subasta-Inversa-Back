@@ -50,45 +50,58 @@ public class ServicioController {
     public ResponseEntity<?> editarServicio(@PathVariable(name = "idServicio", required = true) Long idServicio,
                                             @Valid @RequestBody Servicio servicio, BindingResult result) {
         try {
+            System.out.println("A");
             Optional<Servicio> servicioBD = service.findByNombre(servicio.getNombre());
+            System.out.println("B");
             Optional<Servicio> existServicio = service.findById(idServicio);
+            System.out.println("C");
 
             if (existServicio.isPresent()) {
-                if (!existServicio.get().equals(servicioBD.get())
-                        && existServicio.get().getNombre().equalsIgnoreCase(servicioBD.get().getNombre())) {
-                    return ResponseEntity.badRequest().body(
-                            Collections.singletonMap("mensaje", "Este servicio ya se encuentra registrado.")
-                    );
-                }
+                System.out.println("D");
+                if (servicioBD.isPresent()){
+                    if (!Objects.equals(servicioBD.get(), existServicio.get())){
+                        return ResponseEntity.badRequest().body(
+                                Collections.singletonMap("mensaje", "Este servicio ya se encuentra registrado.")
+                        );
+                    }
 
+                    if (Objects.equals(servicioBD.get(), existServicio.get())
+                            && servicio.getDescripcion_servicio().equalsIgnoreCase(existServicio.get().getDescripcion_servicio())){
+                        return ResponseEntity.badRequest().body(
+                                Collections.singletonMap("mensaje", "No se ha realizado ningun cambio.")
+                        );
+                    }
+                }
+                System.out.println("H");
                 existServicio.get().setNombre(servicio.getNombre());
                 existServicio.get().setDescripcion_servicio(servicio.getDescripcion_servicio());
-
+                System.out.println("I");
                 service.guardar(existServicio.get());
                 return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Servicio modificado correctamente."));
-            }else {
+            } else {
                 return ResponseEntity.status(404).body(Collections.singletonMap("mensaje", "El servicio no existe."));
             }
         } catch (Exception ex) {
-            Logger.getLogger(SubastaController.class.getName()).log(Level.SEVERE, "Imposible realizar cambios");
+            Logger.getLogger(SubastaController.class.getName()).log(Level.SEVERE, "Imposible realizar cambios " + ex.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/eliminar/{idServicio}")
-    public ResponseEntity<?> eliminarServicio(@PathVariable(name = "idServicio", required = true) Long idServicio){
+    public ResponseEntity<?> eliminarServicio(@PathVariable(name = "idServicio", required = true) Long idServicio) {
         try {
-            if (service.findById(idServicio).isPresent()){
+            if (service.findById(idServicio).isPresent()) {
                 service.eliminar(idServicio);
                 return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Servicio eliminado correctamente."));
             } else {
                 return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "El servicio no existe."));
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             Logger.getLogger(SubastaController.class.getName()).log(Level.SEVERE, "NO SE PUDO ELIMINAR");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("mensaje", "No se pudo eliminar."));
         }
     }
+
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err -> {
