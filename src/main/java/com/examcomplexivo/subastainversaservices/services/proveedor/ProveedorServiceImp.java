@@ -35,4 +35,19 @@ public class ProveedorServiceImp implements ProveedorService {
     public Optional<Proveedor> findById(Long id) {
         return proveedorRepository.findById(id);
     }
+
+    @Override
+    public List<Proveedor> findByFiltros(String filtro) {
+        return proveedorRepository.findByFiltros(filtro);
+    }
+
+    @Override
+    public List<Proveedor> findByServicio(String servicio) {
+        return proveedorRepository.findByServicio(servicio);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        proveedorRepository.deleteById(id);
+    }
 }

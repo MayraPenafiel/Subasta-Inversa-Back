@@ -21,13 +21,18 @@ public class ServicioServiceImp implements ServicioService{
     }
 
     @Override
+    public List<Servicio> findByFiltro(String filtro) {
+        return repository.findByFiltro(filtro);
+    }
+
+    @Override
     public Servicio guardar(Servicio servicio) {
         return repository.save(servicio);
     }
 
     @Override
-    public Optional<Servicio> findByNombre(String nombre_servicio) {
-        return repository.findByNombre(nombre_servicio);
+    public Optional<Servicio> findByNombreServicio(String nombre_servicio) {
+        return repository.findByNombreServicio(nombre_servicio);
     }
 
     @Override
@@ -37,6 +42,6 @@ public class ServicioServiceImp implements ServicioService{
 
     @Override
     public void eliminar(Long id) {
-        repository.findById(id);
+        repository.deleteById(id);
     }
 }

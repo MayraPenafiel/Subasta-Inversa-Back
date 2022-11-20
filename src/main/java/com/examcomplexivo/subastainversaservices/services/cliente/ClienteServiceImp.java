@@ -26,8 +26,8 @@ public class ClienteServiceImp implements ClienteService {
     }
 
     @Override
-    public Optional<Cliente> findByNombre(String nombre) {
-        return repository.findByNombre(nombre);
+    public List<Cliente> findByFiltros(String filtro) {
+        return repository.findByFiltros(filtro);
     }
 
     @Override

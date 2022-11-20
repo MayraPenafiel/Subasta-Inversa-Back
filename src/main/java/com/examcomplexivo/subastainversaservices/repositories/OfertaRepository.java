@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.Optional;
-//@Repository
+@Repository
 public interface OfertaRepository extends CrudRepository<Oferta,Long> {
 
-//    Optional<Oferta> findById(Long id);
-//    Optional<Oferta> findByDate(Date fecha);
-//    Optional<Oferta> findyByEstado(Boolean estado);
+    Optional<Oferta> findById(Long id);
+    Optional<Oferta> findByFecha(Date fecha);
+    Optional<Oferta> findByEstado(Boolean estado);
 }

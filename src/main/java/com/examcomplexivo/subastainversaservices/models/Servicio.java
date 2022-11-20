@@ -22,7 +22,7 @@ public class Servicio implements Serializable {
     @Column(name = "id_servicio")
     private long idServicio;
 
-    private String nombre;
+    private String nombreServicio;
 
     private String descripcion_servicio;
 

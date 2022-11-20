@@ -9,10 +9,10 @@ import java.util.Optional;
 public interface ServicioService {
 
     List<Servicio> listar();
-
+    List<Servicio> findByFiltro(String filtro);
     Servicio guardar(Servicio servicio);
 
-    Optional<Servicio> findByNombre(String nombre_servicio);
+    Optional<Servicio> findByNombreServicio(String nombre_servicio);
 
     Optional<Servicio> findById(Long id);
 

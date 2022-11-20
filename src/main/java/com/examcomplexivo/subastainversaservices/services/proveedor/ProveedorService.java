@@ -14,4 +14,10 @@ public interface ProveedorService {
     Optional<Proveedor> findByEmail(String email);
 
     Optional<Proveedor> findById(Long id);
+
+    List<Proveedor> findByFiltros(String filtro);
+
+    List<Proveedor> findByServicio(String servicio);
+
+    void eliminar (Long id);
 }

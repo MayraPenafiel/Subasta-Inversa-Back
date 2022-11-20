@@ -11,7 +11,7 @@ public interface ClienteService {
 
     Cliente guardar(Cliente cliente);
 
-    Optional<Cliente> findByNombre(String nombre);
+    List<Cliente> findByFiltros(String filtro);
 
     Optional<Cliente> findById(Long id);
 

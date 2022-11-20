@@ -19,27 +19,22 @@ public class Oferta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_oferta")
     private Long idOferta;
-    @NotBlank
-    @Column(name = "estadi_oferta")
-    private String estadoOferta;
-    @NotBlank
     @Column(name = "percio_oferta")
     private Double percioOferta;
-    @NotBlank
+
     @Column(name = "fecha_oferta")
-    private Date fecha_oferta;
-    @NotBlank
+    private Date fecha;
     @Column(name = "descripcion_oferta")
     private String descripcion_oferta;
-    @NotBlank
     @Column(name = "estado_oferta")
-    private boolean estado_oferta;
+    private boolean estado;
 
-    @JoinColumn(name = "id_proveedor", unique = true)
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
+    @JoinColumn(referencedColumnName="id_proveedor", nullable = false, unique = true)
     private Proveedor proveedor;
 
-    @JoinColumn(name = "id_subasta", unique = true)
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne()
+    @JoinColumn(referencedColumnName="id_subasta", nullable = false)
     private Subasta subasta;
 }

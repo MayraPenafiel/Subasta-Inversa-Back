@@ -10,36 +10,41 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-//@Service
+@Service
 public class OfertaServiceImp implements OfertaService{
 
-//    @Autowired
-//    OfertaRepository ofertaRepository;
-//
-//    @Override
-//    public List<Oferta> listar() {
-//        return (List<Oferta>) ofertaRepository.findAll();
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public Optional<Oferta> findById(Long id) {
-//        return ofertaRepository.findById(id);
-//    }
-//
-//    @Override
-//    public Optional<Oferta> findByDate(Date fecha) {
-//        return ofertaRepository.findByDate(fecha);
-//    }
-//
-//    @Override
-//    public Optional<Oferta> findByEstado(Boolean estado) {
-//        return ofertaRepository.findyByEstado(estado);
-//    }
-//
-//    @Override
-//    @Transactional
-//    public Oferta save(Oferta oferta) {
-//        return ofertaRepository.save(oferta);
-//    }
+    @Autowired
+    OfertaRepository ofertaRepository;
+
+    @Override
+    public List<Oferta> listar() {
+        return (List<Oferta>) ofertaRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Oferta> findById(Long id) {
+        return ofertaRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Oferta> findByFecha(Date fecha) {
+        return ofertaRepository.findByFecha(fecha);
+    }
+
+    @Override
+    public Optional<Oferta> findByEstado(Boolean estado) {
+        return ofertaRepository.findByEstado(estado);
+    }
+
+    @Override
+    @Transactional
+    public Oferta guardar(Oferta oferta) {
+        return ofertaRepository.save(oferta);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        ofertaRepository.deleteById(id);
+    }
 }

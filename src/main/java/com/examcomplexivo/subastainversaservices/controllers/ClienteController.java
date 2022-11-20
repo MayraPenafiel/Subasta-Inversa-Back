@@ -27,6 +27,11 @@ public class ClienteController {
         return service.listar();
     }
 
+    @GetMapping("listar/{filtro}")
+    public List<Cliente> listarFiltro(@PathVariable(name = "filtro", required = true) String filtro) {
+        return service.findByFiltros(filtro);
+    }
+
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Cliente cliente, BindingResult result) {
 
