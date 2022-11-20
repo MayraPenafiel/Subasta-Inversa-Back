@@ -28,6 +28,11 @@ public class ServicioController {
         return service.listar();
     }
 
+    @GetMapping("listar/{filtro}")
+    public List<Servicio> listarByFiltro(@PathVariable(name = "filtro", required = true) String filtro) {
+        return service.findByFiltro(filtro);
+    }
+
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Servicio servicio, BindingResult result) {
 
@@ -35,7 +40,7 @@ public class ServicioController {
             return validar(result);
         }
 
-        Optional<Servicio> existServicio = service.findByNombre(servicio.getNombre());
+        Optional<Servicio> existServicio = service.findByNombreServicio(servicio.getNombreServicio());
         if (existServicio.isPresent()) {
             return ResponseEntity.badRequest().body(
                     Collections.singletonMap("mensaje", "Este servicio ya se encuentra registrado.")
@@ -51,7 +56,7 @@ public class ServicioController {
                                             @Valid @RequestBody Servicio servicio, BindingResult result) {
         try {
             System.out.println("A");
-            Optional<Servicio> servicioBD = service.findByNombre(servicio.getNombre());
+            Optional<Servicio> servicioBD = service.findByNombreServicio(servicio.getNombreServicio());
             System.out.println("B");
             Optional<Servicio> existServicio = service.findById(idServicio);
             System.out.println("C");
@@ -73,7 +78,7 @@ public class ServicioController {
                     }
                 }
                 System.out.println("H");
-                existServicio.get().setNombre(servicio.getNombre());
+                existServicio.get().setNombreServicio(servicio.getNombreServicio());
                 existServicio.get().setDescripcion_servicio(servicio.getDescripcion_servicio());
                 System.out.println("I");
                 service.guardar(existServicio.get());

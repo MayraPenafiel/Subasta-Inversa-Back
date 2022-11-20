@@ -10,10 +10,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +29,17 @@ public class SubastaController {
     @GetMapping("listar")
     public List<Subasta> listar() {
         return subastaService.listar();
+    }
+
+    @GetMapping("listar/{fechaInicio}/{fechaFin}")
+    public List<Subasta> listarByFechas(@PathVariable(name = "fechaInicio", required = true) java.sql.Date fechaInicio,
+                                @PathVariable(name = "fechaFin", required = true) java.sql.Date fechaFin) {
+        return subastaService.findByFechas(fechaInicio, fechaFin);
+    }
+
+    @GetMapping("listar/{filtro}")
+    public List<Subasta> listarByFiltros(@PathVariable(name = "filtro", required = true) String filtro) {
+        return subastaService.findByFiltro(filtro);
     }
 
     @PostMapping("crear")
@@ -82,6 +92,25 @@ public class SubastaController {
                     + " " + err.getDefaultMessage());
         });
         return ResponseEntity.badRequest().body(errores);
+    }
+
+    /**
+     * Permite convertir un String en fecha (Date).
+     * @param fecha Cadena de fecha dd/MM/yyyy
+     * @return Objeto Date
+     */
+    public static Date ParseFecha(String fecha)
+    {
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");
+        Date fechaDate = null;
+        try {
+            fechaDate = formato.parse(fecha);
+        }
+        catch (ParseException ex)
+        {
+            System.out.println(ex);
+        }
+        return fechaDate;
     }
 
 }

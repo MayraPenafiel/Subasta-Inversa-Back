@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,16 @@ public class SubastaServiceImp implements SubastaService {
     @Transactional(readOnly = true)
     public List<Subasta> listar() {
         return (List<Subasta>) repository.findAll();
+    }
+
+    @Override
+    public List<Subasta> findByFechas(Date fechaIncio, Date fechaFin) {
+        return repository.findByFechas(fechaIncio, fechaFin);
+    }
+
+    @Override
+    public List<Subasta> findByFiltro(String filtro) {
+        return repository.findByFiltro(filtro);
     }
 
     @Override

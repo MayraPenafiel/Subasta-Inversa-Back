@@ -28,6 +28,14 @@ public class ProveedorController {
         return proveedorService.listar();
     }
 
+    @GetMapping("listar/{filtro}")
+    public List<Proveedor> listarByFiltro(@PathVariable(name = "filtro", required = true) String filtro){
+        return proveedorService.findByFiltros(filtro);
+    }
+    @GetMapping("listar/servicio/{servicio}")
+    public List<Proveedor> listarByServicio(@PathVariable(name = "servicio", required = true) String servicio){
+        return proveedorService.findByServicio(servicio.toLowerCase());
+    }
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Proveedor proveedor, BindingResult result) {
         if (result.hasErrors()) {

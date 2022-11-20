@@ -15,7 +15,7 @@ import java.util.List;
 public class Proveedor extends Persona {
 
     @Column(name = "anios_exp")
-    private Integer anios_experiencia;
+    private String anios_experiencia;
 
     @JoinColumn(name = "id_usuario", unique = true)
     @OneToOne(cascade = CascadeType.ALL)
