@@ -67,6 +67,7 @@ public class ProveedorController {
             optionalProveedor.get().setTelefono(proveedor.getTelefono());
             optionalProveedor.get().setDireccion(proveedor.getDireccion());
             optionalProveedor.get().setAnios_experiencia(proveedor.getAnios_experiencia());
+            optionalProveedor.get().setServicios(proveedor.getServicios());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(proveedorService.crear(optionalProveedor.get()));
         }
