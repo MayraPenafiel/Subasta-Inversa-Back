@@ -53,6 +53,7 @@ public interface OfertaRepository extends CrudRepository<Oferta, Long> {
             "FROM db_subasta.oferta AS ofe " +
             "JOIN db_subasta.proveedor AS pro ON ofe.proveedor_id_proveedor = pro.id_proveedor " +
             "JOIN db_subasta.personas AS per ON pro.id_proveedor = per.id_persona" +
-            " WHERE ofe.calificacion_oferta = :filtro")
+            " WHERE ofe.calificacion_oferta = :filtro",
+            nativeQuery = true)
     Optional<Oferta> findbyCalificaion(String filtro);
 }
