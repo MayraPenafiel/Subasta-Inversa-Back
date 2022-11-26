@@ -82,7 +82,7 @@ public class OfertaController {
             return ResponseEntity.ok(ofertaOptional.get());
         }
         return ResponseEntity.badRequest().body(
-                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
+                Collections.singletonMap("mensaje","No se ha encontrado ninguna oferta")
         );
     }
 
@@ -94,7 +94,7 @@ public class OfertaController {
             return ResponseEntity.ok(ofertaOptional.get());
         }
         return ResponseEntity.badRequest().body(
-                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
+                Collections.singletonMap("mensaje","No se ha encontrado ninguna oferta")
         );
     }
 
@@ -106,9 +106,34 @@ public class OfertaController {
             return ResponseEntity.ok(ofertaOptional.get());
         }
         return ResponseEntity.badRequest().body(
-                Collections.singletonMap("Mensaje","No se ha encontrado ninguna oferta")
+                Collections.singletonMap("mensaje","No se ha encontrado ninguna oferta")
         );
     }
+
+    @GetMapping("listar/{proveedor}")
+    public ResponseEntity<?> listarProveedor(@PathVariable String filtro){
+        Optional<Oferta> ofertaOptional=ofertaService.findbyProveedor(filtro);
+        if (ofertaOptional.isPresent()) {
+
+            return ResponseEntity.ok(ofertaOptional.get());
+        }
+        return ResponseEntity.badRequest().body(
+                Collections.singletonMap("mensaje","No se ha encontrado ninguna oferta")
+        );
+    }
+
+    @GetMapping("listar/{califiacion}")
+    public ResponseEntity<?> listarCalificacion(@PathVariable String filtro){
+        Optional<Oferta> ofertaOptional=ofertaService.findbyCalificaion(filtro);
+        if (ofertaOptional.isPresent()) {
+
+            return ResponseEntity.ok(ofertaOptional.get());
+        }
+        return ResponseEntity.badRequest().body(
+                Collections.singletonMap("mensaje","No se ha encontrado ninguna oferta")
+        );
+    }
+
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err -> {

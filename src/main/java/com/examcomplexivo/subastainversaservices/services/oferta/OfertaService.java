@@ -11,7 +11,8 @@ public interface OfertaService {
     Optional<Oferta> findById(Long id);
     Optional<Oferta> findByFecha(Date fecha);
     Optional<Oferta> findByEstado(Boolean estado);
-
+    Optional<Oferta> findbyProveedor(String filtro);
+    Optional<Oferta> findbyCalificaion(String filtro);
     Oferta guardar(Oferta oferta);
 
     void eliminar(Long id);

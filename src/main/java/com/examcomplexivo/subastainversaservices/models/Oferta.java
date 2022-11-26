@@ -28,6 +28,8 @@ public class Oferta implements Serializable {
     private String descripcion_oferta;
     @Column(name = "estado_oferta")
     private boolean estado;
+    @Column(name = "calificacion_oferta")
+    private double calificacion;
 
     @ManyToOne()
     @JoinColumn(referencedColumnName="id_proveedor", nullable = false, unique = true)
