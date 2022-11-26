@@ -1,10 +1,17 @@
 package com.examcomplexivo.subastainversaservices.controllers;
 
 import com.examcomplexivo.subastainversaservices.models.Cliente;
+import com.examcomplexivo.subastainversaservices.security.controller.AuthController;
+import com.examcomplexivo.subastainversaservices.security.dto.NuevoUsuario;
+import com.examcomplexivo.subastainversaservices.security.entity.Rol;
+import com.examcomplexivo.subastainversaservices.security.enums.RolNombre;
+import com.examcomplexivo.subastainversaservices.security.service.rol.RolService;
 import com.examcomplexivo.subastainversaservices.services.cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +23,17 @@ import java.util.logging.Logger;
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
         RequestMethod.DELETE })
-@RequestMapping("/cliente")
+@RequestMapping("/auth/cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService service;
+
+    @Autowired
+    private RolService rolService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("listar")
     public List<Cliente> listar() {
@@ -32,13 +45,12 @@ public class ClienteController {
         return service.findByFiltros(filtro);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Cliente cliente, BindingResult result) {
-
         if (result.hasErrors()) {
             return validar(result);
         }
-
         Optional<Cliente> existClienteEmail = service.findByEmail(cliente.getEmail());
         Optional<Cliente> existClienteTelefono = service.findByTelefono(cliente.getTelefono());
         /**
@@ -55,12 +67,18 @@ public class ClienteController {
                     Collections.singletonMap("mensaje", "Ya hay un usuario registrado con este telefono.")
             );
         }
-
+        System.out.println("A");
+        cliente.getUsuario().setContraseniaUsuario(passwordEncoder.encode(cliente.getUsuario().getContraseniaUsuario()));
+        System.out.println("B");
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rolService.findByRolNombre(RolNombre.ROLE_CLIENTE).get());
+        cliente.getUsuario().setRoles(roles);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.guardar(cliente));
     }
 
     @PutMapping("/editar/{idCliente}")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<?> editarCliente(@PathVariable(name = "idCliente", required = true) Long idCliente,
                                            @Valid @RequestBody Cliente cliente, BindingResult result) {
         if (result.hasErrors()) {
@@ -111,6 +129,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/eliminar/{idCliente}")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<?> eliminarCliente(@PathVariable(name = "idCliente", required = true) Long idCliente) {
         try {
             if (service.findById(idCliente).isPresent()) {
@@ -128,7 +147,7 @@ public class ClienteController {
     private static ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
         result.getFieldErrors().forEach(err -> {
-            errores.put(err.getField(), "El campo" + err.getField()
+            errores.put("mensaje", "El campo " + err.getField()
                     + " " + err.getDefaultMessage());
         });
         return ResponseEntity.badRequest().body(errores);

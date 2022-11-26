@@ -5,6 +5,7 @@ import com.examcomplexivo.subastainversaservices.services.subasta.SubastaService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 @CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
         RequestMethod.DELETE })
 @Controller
-@RequestMapping("/subasta")
+@RequestMapping("/auth/subasta")
 public class SubastaController {
 
     @Autowired
@@ -43,6 +44,7 @@ public class SubastaController {
     }
 
     @PostMapping("crear")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<?> crear(@Valid @RequestBody Subasta subasta, BindingResult result) {
         if (result.hasErrors()) {
             return validar(result);
@@ -54,6 +56,7 @@ public class SubastaController {
     }
 
     @PutMapping("/editar/{idSubasta}")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<?> editarSubasta(@PathVariable(name = "idSubasta", required = true)Long idSubasta,
                                                    @RequestBody Subasta subasta){
         try{
@@ -71,6 +74,7 @@ public class SubastaController {
     }
 
     @DeleteMapping("/eliminar/{idSubasta}")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<?> eliminarSubasta (@PathVariable(name = "idSubasta", required = true)String idSubasta){
         try{
             if (subastaService.findById(Long.parseLong(idSubasta)).isPresent()) {
@@ -93,24 +97,4 @@ public class SubastaController {
         });
         return ResponseEntity.badRequest().body(errores);
     }
-
-    /**
-     * Permite convertir un String en fecha (Date).
-     * @param fecha Cadena de fecha dd/MM/yyyy
-     * @return Objeto Date
-     */
-    public static Date ParseFecha(String fecha)
-    {
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");
-        Date fechaDate = null;
-        try {
-            fechaDate = formato.parse(fecha);
-        }
-        catch (ParseException ex)
-        {
-            System.out.println(ex);
-        }
-        return fechaDate;
-    }
-
 }

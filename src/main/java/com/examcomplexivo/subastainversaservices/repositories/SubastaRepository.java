@@ -22,7 +22,9 @@ public interface SubastaRepository extends CrudRepository<Subasta, Long> {
             "WHERE per.nombre LIKE %:filtro% " +
             "OR per.apellido LIKE %:filtro% " +
             "OR ser.nombre_servicio LIKE %:filtro% " +
-            "OR su.estado_subasta LIKE %:filtro%",
+            "OR su.estado_subasta LIKE %:filtro% " +
+            "OR su.titulo_subasta LIKE %:filtro% " +
+            "OR su.hora_cierre_subasta LIKE %:filtro%",
             nativeQuery = true)
     List<Subasta> findByFiltro(String filtro);
 }

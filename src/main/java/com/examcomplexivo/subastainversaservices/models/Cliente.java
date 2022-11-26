@@ -1,10 +1,10 @@
 package com.examcomplexivo.subastainversaservices.models;
 
+import com.examcomplexivo.subastainversaservices.security.entity.Usuario;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
 @Data
 @Entity

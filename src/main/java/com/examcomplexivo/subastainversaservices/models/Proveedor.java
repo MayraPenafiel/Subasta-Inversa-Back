@@ -1,5 +1,6 @@
 package com.examcomplexivo.subastainversaservices.models;
 
+import com.examcomplexivo.subastainversaservices.security.entity.Usuario;
 import lombok.Data;
 
 import javax.persistence.*;

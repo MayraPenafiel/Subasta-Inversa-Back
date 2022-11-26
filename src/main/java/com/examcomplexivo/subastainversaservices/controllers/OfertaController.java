@@ -5,6 +5,7 @@ import com.examcomplexivo.subastainversaservices.services.oferta.OfertaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import java.util.*;
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
         RequestMethod.DELETE })
-@RequestMapping("/oferta")
+@RequestMapping("/auth/oferta")
 public class OfertaController {
 
     @Autowired
@@ -26,6 +27,7 @@ public class OfertaController {
     }
 
     @PostMapping("crear")
+    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     public ResponseEntity<?> crear(@Valid @RequestBody Oferta oferta, BindingResult result){
 
 //        Optional<Oferta> ofertaBD = ofertaService.findById(oferta.getIdOferta());
@@ -41,6 +43,7 @@ public class OfertaController {
     }
 
     @PutMapping("/editar/{idOferta}")
+    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     public ResponseEntity<?> editarOderta(@PathVariable(name = "idOferta", required = true)Long idOferta,
                                           @RequestBody Oferta oferta){
         try{
@@ -57,6 +60,7 @@ public class OfertaController {
     }
 
     @DeleteMapping("/eliminar/{idOferta}")
+    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     public ResponseEntity<?> eliminarOferta (@PathVariable(name = "idOferta", required = true) Long idOferta){
         try{
             if (ofertaService.findById(idOferta).isPresent()){

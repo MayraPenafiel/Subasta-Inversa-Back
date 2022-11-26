@@ -2,10 +2,15 @@ package com.examcomplexivo.subastainversaservices.controllers;
 
 import com.examcomplexivo.subastainversaservices.models.Cliente;
 import com.examcomplexivo.subastainversaservices.models.Proveedor;
+import com.examcomplexivo.subastainversaservices.security.entity.Rol;
+import com.examcomplexivo.subastainversaservices.security.enums.RolNombre;
+import com.examcomplexivo.subastainversaservices.security.service.rol.RolService;
 import com.examcomplexivo.subastainversaservices.services.proveedor.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +22,17 @@ import java.util.logging.Logger;
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
         RequestMethod.DELETE })
-@RequestMapping("/proveedor")
+@RequestMapping("/auth/proveedor")
 public class ProveedorController {
 
     @Autowired
     private ProveedorService proveedorService;
+    @Autowired
+    private RolService rolService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("listar")
     public List<Proveedor> listar(){
         return proveedorService.listar();
@@ -36,6 +46,7 @@ public class ProveedorController {
     public List<Proveedor> listarByServicio(@PathVariable(name = "servicio", required = true) String servicio){
         return proveedorService.findByServicio(servicio.toLowerCase());
     }
+    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Proveedor proveedor, BindingResult result) {
         if (result.hasErrors()) {
@@ -46,11 +57,14 @@ public class ProveedorController {
                     Collections.singletonMap("Mensaje", "Este email ya esta en uso.")
             );
         }
-        
+        proveedor.getUsuario().setContraseniaUsuario(passwordEncoder.encode(proveedor.getUsuario().getContraseniaUsuario()));
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rolService.findByRolNombre(RolNombre.ROLE_PROVEEDOR).get());
+        proveedor.getUsuario().setRoles(roles);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(proveedorService.crear(proveedor));
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     @PutMapping("/editar/{idProveedor}")
     public ResponseEntity<?> actualizar(@PathVariable(name = "idProveedor", required = true) Long idProveedor,
                                         @Valid @RequestBody Proveedor proveedor, BindingResult result){
@@ -75,6 +89,7 @@ public class ProveedorController {
         return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     @DeleteMapping("/eliminar/{idProveedor}")
     public ResponseEntity<?> eliminarServicio(@PathVariable(name = "idProveedor", required = true) Long idProveedor) {
         try {

@@ -31,6 +31,12 @@ public class Subasta {
     @Column(name = "estado_subasta")
     private String estadoSubasta;
 
+    @Column(name = "titulo_subasta")
+    private String tituloSubasta;
+
+    @Column(name = "hora_cierre_subasta")
+    private String horaCierreSubasta;
+
     @Column(name = "desc_subasta")
     private String descripcionSubasta;
 

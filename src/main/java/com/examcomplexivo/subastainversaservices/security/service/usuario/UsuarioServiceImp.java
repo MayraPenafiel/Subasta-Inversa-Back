@@ -1,14 +1,18 @@
-package com.examcomplexivo.subastainversaservices.services.usuario;
+package com.examcomplexivo.subastainversaservices.security.service.usuario;
 
-import com.examcomplexivo.subastainversaservices.models.Usuario;
-import com.examcomplexivo.subastainversaservices.repositories.UsuarioRespository;
+import com.examcomplexivo.subastainversaservices.security.entity.Usuario;
+import com.examcomplexivo.subastainversaservices.security.repository.UsuarioRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+// * Mantiene la coherencia en mi BD
+// * Si hay varias peticiones hacia una misma tabla y ocurre un error realizar un rollback
+@Transactional
 public class UsuarioServiceImp implements UsuarioService{
 
     @Autowired
@@ -27,6 +31,11 @@ public class UsuarioServiceImp implements UsuarioService{
     @Override
     public Optional<Usuario> findByNombreUsuario(String nombreUsuario) {
         return usuarioRespository.findByNombreUsuario(nombreUsuario);
+    }
+
+    @Override
+    public boolean existsByNombreUsuario(String nombreUsuario) {
+        return usuarioRespository.existsByNombreUsuario(nombreUsuario);
     }
 
     @Override

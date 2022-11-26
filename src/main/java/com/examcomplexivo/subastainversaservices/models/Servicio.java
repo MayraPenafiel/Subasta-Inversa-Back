@@ -21,12 +21,16 @@ public class Servicio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_servicio")
     private long idServicio;
-
+    @Column(name = "nombre_servicio", nullable = false, length = 50)
     private String nombreServicio;
-
+    @Column(name = "descripcion_servicio", nullable = false, length = 200)
     private String descripcion_servicio;
 
     public Servicio() {
+    }
 
+    public Servicio(String nombreServicio, String descripcion_servicio) {
+        this.nombreServicio = nombreServicio;
+        this.descripcion_servicio = descripcion_servicio;
     }
 }

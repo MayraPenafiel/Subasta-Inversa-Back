@@ -6,6 +6,7 @@ import com.examcomplexivo.subastainversaservices.services.servicio.ServicioServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,12 @@ import java.util.logging.Logger;
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT,
         RequestMethod.DELETE})
-@RequestMapping("/servicio")
+@RequestMapping("/auth/servicio")
 public class ServicioController {
 
     @Autowired
     private ServicioService service;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("listar")
     public List<Servicio> listar() {
         return service.listar();
@@ -33,6 +34,7 @@ public class ServicioController {
         return service.findByFiltro(filtro);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Servicio servicio, BindingResult result) {
 
@@ -51,18 +53,15 @@ public class ServicioController {
                 .body(service.guardar(servicio));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/editar/{idServicio}")
     public ResponseEntity<?> editarServicio(@PathVariable(name = "idServicio", required = true) Long idServicio,
                                             @Valid @RequestBody Servicio servicio, BindingResult result) {
         try {
-            System.out.println("A");
             Optional<Servicio> servicioBD = service.findByNombreServicio(servicio.getNombreServicio());
-            System.out.println("B");
             Optional<Servicio> existServicio = service.findById(idServicio);
-            System.out.println("C");
 
             if (existServicio.isPresent()) {
-                System.out.println("D");
                 if (servicioBD.isPresent()){
                     if (!Objects.equals(servicioBD.get(), existServicio.get())){
                         return ResponseEntity.badRequest().body(
@@ -77,10 +76,8 @@ public class ServicioController {
                         );
                     }
                 }
-                System.out.println("H");
                 existServicio.get().setNombreServicio(servicio.getNombreServicio());
                 existServicio.get().setDescripcion_servicio(servicio.getDescripcion_servicio());
-                System.out.println("I");
                 service.guardar(existServicio.get());
                 return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Servicio modificado correctamente."));
             } else {
@@ -93,6 +90,7 @@ public class ServicioController {
     }
 
     @DeleteMapping("/eliminar/{idServicio}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> eliminarServicio(@PathVariable(name = "idServicio", required = true) Long idServicio) {
         try {
             if (service.findById(idServicio).isPresent()) {
