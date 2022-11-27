@@ -23,7 +23,7 @@ public class ServicioController {
 
     @Autowired
     private ServicioService service;
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("listar")
     public List<Servicio> listar() {
         return service.listar();
