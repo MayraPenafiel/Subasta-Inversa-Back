@@ -46,26 +46,22 @@ public class AuthController {
     @Autowired
     JwtProvider jwtProvider;
 
-//    @PostMapping("/crear")
-//    public ResponseEntity<?> nuevo(@Valid @RequestBody NuevoUsuario nuevoUsuario, BindingResult bindingResult){
-//        if (bindingResult.hasErrors()) {
-//            return validar(bindingResult);
-//        }
-//        if (usuarioServiceImp.existsByNombreUsuario(nuevoUsuario.getNombreUsuario())){
-//            return ResponseEntity.badRequest().body(Collections.singletonMap("mensaje", "Este usuario ya existe"));
-//        }
-//        Usuario usuario = new Usuario(nuevoUsuario.getNombreUsuario(), passwordEncoder.encode(nuevoUsuario.getContraseniaUsuario()));
-//        Set<Rol> roles = new HashSet<>();
-//        System.out.println("ROLES ASIGNADOS: "+rolServiceImp.findByRolNombre(RolNombre.Cliente).get());
-//        roles.add(rolServiceImp.findByRolNombre(RolNombre.Cliente).get());
-//
-//        if (nuevoUsuario.getRoles().contains("admin")){
-//            roles.add(rolServiceImp.findByRolNombre(RolNombre.Administrador).get());
-//        }
-//        usuario.setRoles(roles);
-//        usuarioServiceImp.guardar(usuario);
-//        return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Usuario registrado exitosamente."));
-//    }
+    @PostMapping("/crear/admin")
+    public ResponseEntity<?> nuevo(@Valid @RequestBody NuevoUsuario nuevoUsuario, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return validar(bindingResult);
+        }
+        if (usuarioServiceImp.existsByNombreUsuario(nuevoUsuario.getNombreUsuario())){
+            return ResponseEntity.badRequest().body(Collections.singletonMap("mensaje", "Este usuario ya existe"));
+        }
+        Usuario usuario = new Usuario(nuevoUsuario.getNombreUsuario(), passwordEncoder.encode(nuevoUsuario.getContraseniaUsuario()));
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rolServiceImp.findByRolNombre(RolNombre.ROLE_ADMIN).get());
+
+        usuario.setRoles(roles);
+        usuarioServiceImp.guardar(usuario);
+        return ResponseEntity.ok().body(Collections.singletonMap("mensaje", "Usuario registrado exitosamente."));
+    }
 
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult){
