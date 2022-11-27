@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -24,6 +26,12 @@ public class OfertaController {
     @GetMapping("listar")
     public List<Oferta> listar(){
         return ofertaService.listar();
+    }
+
+    @GetMapping("listar/subasta/{idSubasta}")
+    public List<Oferta> listarBySubasta(@PathVariable(name = "idSubasta", required = true)Long idSubasta){
+        System.out.println("ID "+idSubasta);
+        return ofertaService.findBySubasta(idSubasta);
     }
 
     @PostMapping("crear")
@@ -74,8 +82,8 @@ public class OfertaController {
         }
     }
 
-    @GetMapping("listar/{id}")
-    public ResponseEntity<?> listarId(@PathVariable Long id){
+    @GetMapping("listar/id/{id}")
+    public ResponseEntity<?> listarId(@RequestParam Long id){
         Optional<Oferta> ofertaOptional=ofertaService.findById(id);
         if (ofertaOptional.isPresent()) {
 
@@ -86,9 +94,9 @@ public class OfertaController {
         );
     }
 
-    @GetMapping("listar/{fecha}") //Buscar por fecha
-    public ResponseEntity<?> listarFecha(@PathVariable Date fecha){
-        Optional<Oferta> ofertaOptional=ofertaService.findByFecha(fecha);
+    @GetMapping("listar/fecha/{fecha}") //Buscar por fecha
+    public ResponseEntity<?> listarFecha(@RequestParam String fecha){
+        Optional<Oferta> ofertaOptional=ofertaService.findByFecha(parseFecha(fecha));
         if (ofertaOptional.isPresent()) {
 
             return ResponseEntity.ok(ofertaOptional.get());
@@ -98,7 +106,7 @@ public class OfertaController {
         );
     }
 
-    @GetMapping("listar/{estado}")
+    @GetMapping("listar/estado/{estado}")
     public ResponseEntity<?> listarEstado(@PathVariable Boolean estado){
         Optional<Oferta> ofertaOptional=ofertaService.findByEstado(estado);
         if (ofertaOptional.isPresent()) {
@@ -110,9 +118,10 @@ public class OfertaController {
         );
     }
 
-    @GetMapping("listar/{proveedor}")
-    public ResponseEntity<?> listarProveedor(@PathVariable String filtro){
-        Optional<Oferta> ofertaOptional=ofertaService.findbyProveedor(filtro);
+    @GetMapping("listar/proveedor/{proveedor}")
+    public ResponseEntity<?> listarProveedor(@PathVariable Long proveedor){
+        System.out.println(proveedor);
+        Optional<Oferta> ofertaOptional=ofertaService.findbyProveedor(proveedor);
         if (ofertaOptional.isPresent()) {
 
             return ResponseEntity.ok(ofertaOptional.get());
@@ -122,9 +131,10 @@ public class OfertaController {
         );
     }
 
-    @GetMapping("listar/{califiacion}")
-    public ResponseEntity<?> listarCalificacion(@PathVariable String filtro){
-        Optional<Oferta> ofertaOptional=ofertaService.findbyCalificaion(filtro);
+    @GetMapping("listar/calificacion/{califiacion:.*}")
+    public ResponseEntity<?> listarCalificacion(@PathVariable Double califiacion){
+        System.out.println(califiacion);
+        Optional<Oferta> ofertaOptional=ofertaService.findbyCalificaion(califiacion);
         if (ofertaOptional.isPresent()) {
 
             return ResponseEntity.ok(ofertaOptional.get());
@@ -141,6 +151,20 @@ public class OfertaController {
                     + " " + err.getDefaultMessage());
         });
         return ResponseEntity.badRequest().body(errores);
+    }
+
+    public Date parseFecha(String fecha)
+    {
+        SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+        Date fechaDate = null;
+        try {
+            fechaDate = formato.parse(fecha);
+        }
+        catch (ParseException ex)
+        {
+            System.out.println(ex);
+        }
+        return fechaDate;
     }
 
 }

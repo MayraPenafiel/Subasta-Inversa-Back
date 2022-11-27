@@ -32,7 +32,7 @@ public class Oferta implements Serializable {
     private double calificacion;
 
     @ManyToOne()
-    @JoinColumn(referencedColumnName="id_proveedor", nullable = false, unique = true)
+    @JoinColumn(referencedColumnName="id_proveedor", nullable = false)
     private Proveedor proveedor;
 
 

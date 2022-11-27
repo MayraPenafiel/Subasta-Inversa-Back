@@ -38,12 +38,17 @@ public class OfertaServiceImp implements OfertaService{
     }
 
     @Override
-    public Optional<Oferta> findbyProveedor(String filtro) {
+    public Optional<Oferta> findbyProveedor(Long filtro) {
         return ofertaRepository.findbyProveedor(filtro);
     }
 
     @Override
-    public Optional<Oferta> findbyCalificaion(String filtro) {
+    public List<Oferta> findBySubasta(Long id) {
+        return ofertaRepository.findBySubasta(id);
+    }
+
+    @Override
+    public Optional<Oferta> findbyCalificaion(Double filtro) {
         return ofertaRepository.findbyCalificaion(filtro);
     }
 
