@@ -46,6 +46,7 @@ public class SubastaController {
     @PostMapping("crear")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<?> crear(@Valid @RequestBody Subasta subasta, BindingResult result) {
+        System.out.println("");
         if (result.hasErrors()) {
             return validar(result);
         }
