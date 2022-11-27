@@ -31,6 +31,11 @@ public class ProveedorServiceImp implements ProveedorService {
     }
 
     @Override
+    public Optional<Proveedor> findByTelefono(String telefono) {
+        return proveedorRepository.findByTelefono(telefono);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<Proveedor> findById(Long id) {
         return proveedorRepository.findById(id);

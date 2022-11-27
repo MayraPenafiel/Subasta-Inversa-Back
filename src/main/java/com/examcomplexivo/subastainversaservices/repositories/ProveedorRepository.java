@@ -20,10 +20,12 @@ public interface ProveedorRepository extends CrudRepository<Proveedor, Long> {
             "OR p.email LIKE %:filtro% " +
             "OR p.direccion LIKE %:filtro% " +
             "OR p.telefono LIKE %:filtro% " +
-            "OR p.anios_experiencia LIKE %:filtro%")
+            "OR p.anios_experiencia LIKE %:filtro% "+
+            "OR p.usuario.nombreUsuario LIKE %:filtro%")
     List<Proveedor> findByFiltros(String filtro);
-
     Optional<Proveedor> findByEmail(String email);
+
+    Optional<Proveedor> findByTelefono(String telefono);
 
     // * Busqueda personalizada con la etiqueta @Query nativa (con SQL)
     @Query(value = "SELECT * " +

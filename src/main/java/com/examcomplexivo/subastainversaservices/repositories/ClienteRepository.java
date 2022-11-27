@@ -16,7 +16,8 @@ public interface ClienteRepository extends CrudRepository<Cliente, Long> {
             "OR c.apellido LIKE %:filtro% " +
             "OR c.email LIKE %:filtro% " +
             "OR c.direccion LIKE %:filtro% " +
-            "OR c.telefono LIKE %:filtro%")
+            "OR c.telefono LIKE %:filtro% " +
+            "OR c.usuario.nombreUsuario LIKE %:filtro%")
     List<Cliente> findByFiltros(String filtro);
     Optional<Cliente> findById(Long id);
 

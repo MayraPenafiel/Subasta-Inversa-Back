@@ -15,6 +15,8 @@ public interface PersonaService {
 
     Optional<Persona> findByEmail(String email);
 
+    Optional<Persona> findByTelefono(String telefono);
+
     Persona guardar(Persona persona);
 
     void eliminar(Long id);

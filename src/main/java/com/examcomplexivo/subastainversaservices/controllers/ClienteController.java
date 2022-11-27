@@ -7,6 +7,7 @@ import com.examcomplexivo.subastainversaservices.security.entity.Rol;
 import com.examcomplexivo.subastainversaservices.security.enums.RolNombre;
 import com.examcomplexivo.subastainversaservices.security.service.rol.RolService;
 import com.examcomplexivo.subastainversaservices.services.cliente.ClienteService;
+import com.examcomplexivo.subastainversaservices.services.persona.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,8 @@ public class ClienteController {
     private ClienteService service;
 
     @Autowired
+    private PersonaService personaServiceImp;
+    @Autowired
     private RolService rolService;
 
     @Autowired
@@ -45,7 +48,7 @@ public class ClienteController {
         return service.findByFiltros(filtro);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
+    //@PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Cliente cliente, BindingResult result) {
         if (result.hasErrors()) {
@@ -57,19 +60,17 @@ public class ClienteController {
          * Validacion para que los usuarios no se repitan
          * Solo se valida por email y telefono ya que los nombres y apellidos si se pueden repetir
          * **/
-        if (existClienteEmail.isPresent()) {
+        if (existClienteEmail.isPresent() || personaServiceImp.findByEmail(cliente.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(
                     Collections.singletonMap("mensaje", "Ya hay un usuario registrado con este email.")
             );
         }
-        if (existClienteTelefono.isPresent()) {
+        if (existClienteTelefono.isPresent() || personaServiceImp.findByTelefono(cliente.getTelefono()).isPresent()) {
             return ResponseEntity.badRequest().body(
-                    Collections.singletonMap("mensaje", "Ya hay un usuario registrado con este telefono.")
+                    Collections.singletonMap("mensaje", "Ya existe un usuario registrado con este número de celular")
             );
         }
-        System.out.println("A");
         cliente.getUsuario().setContraseniaUsuario(passwordEncoder.encode(cliente.getUsuario().getContraseniaUsuario()));
-        System.out.println("B");
         Set<Rol> roles = new HashSet<>();
         roles.add(rolService.findByRolNombre(RolNombre.ROLE_CLIENTE).get());
         cliente.getUsuario().setRoles(roles);

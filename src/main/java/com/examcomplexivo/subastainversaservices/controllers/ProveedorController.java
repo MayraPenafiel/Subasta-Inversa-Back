@@ -5,6 +5,8 @@ import com.examcomplexivo.subastainversaservices.models.Proveedor;
 import com.examcomplexivo.subastainversaservices.security.entity.Rol;
 import com.examcomplexivo.subastainversaservices.security.enums.RolNombre;
 import com.examcomplexivo.subastainversaservices.security.service.rol.RolService;
+import com.examcomplexivo.subastainversaservices.services.persona.PersonaService;
+import com.examcomplexivo.subastainversaservices.services.persona.PersonaServiceImp;
 import com.examcomplexivo.subastainversaservices.services.proveedor.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class ProveedorController {
 
     @Autowired
     private ProveedorService proveedorService;
+
+    @Autowired
+    private PersonaService personaServiceImp;
     @Autowired
     private RolService rolService;
     @Autowired
@@ -46,17 +51,25 @@ public class ProveedorController {
     public List<Proveedor> listarByServicio(@PathVariable(name = "servicio", required = true) String servicio){
         return proveedorService.findByServicio(servicio.toLowerCase());
     }
-    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
+    //@PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     @PostMapping("crear")
     public ResponseEntity<?> crear(@Valid @RequestBody Proveedor proveedor, BindingResult result) {
         if (result.hasErrors()) {
             return validar(result);
         }
-        if (proveedorService.findByEmail(proveedor.getEmail()).isPresent()) {
+        if (proveedorService.findByEmail(proveedor.getEmail()).isPresent() || personaServiceImp.findByEmail(proveedor.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(
-                    Collections.singletonMap("Mensaje", "Este email ya esta en uso.")
+                    Collections.singletonMap("mensaje", "Ya hay un usuario registrado con este email.")
             );
         }
+        System.out.println("NUMERO TELEFONO "+proveedor.getTelefono());
+        System.out.println("ERORO DUPLCATE "+ (proveedorService.findByTelefono(proveedor.getTelefono()).isPresent()));
+        if (proveedorService.findByTelefono(proveedor.getTelefono()).isPresent() || personaServiceImp.findByTelefono(proveedor.getTelefono()).isPresent()) {
+            return ResponseEntity.badRequest().body(
+                    Collections.singletonMap("mensaje", "Ya existe un usuario registrado con este número de celular")
+            );
+        }
+
         proveedor.getUsuario().setContraseniaUsuario(passwordEncoder.encode(proveedor.getUsuario().getContraseniaUsuario()));
         Set<Rol> roles = new HashSet<>();
         roles.add(rolService.findByRolNombre(RolNombre.ROLE_PROVEEDOR).get());

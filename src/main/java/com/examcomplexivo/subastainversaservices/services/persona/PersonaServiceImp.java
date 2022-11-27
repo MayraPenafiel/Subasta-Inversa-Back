@@ -38,6 +38,11 @@ public class PersonaServiceImp implements PersonaService {
     }
 
     @Override
+    public Optional<Persona> findByTelefono(String telefono) {
+        return repository.findByTelefono(telefono);
+    }
+
+    @Override
     @Transactional
     public Persona guardar(Persona persona) {
         return repository.save(persona);

@@ -21,6 +21,7 @@ public interface SubastaRepository extends CrudRepository<Subasta, Long> {
             "JOIN db_subasta.servicio AS ser ON su.id_servicio = ser.id_servicio " +
             "WHERE per.nombre LIKE %:filtro% " +
             "OR per.apellido LIKE %:filtro% " +
+            "OR per.email LIKE %:filtro% " +
             "OR ser.nombre_servicio LIKE %:filtro% " +
             "OR su.estado_subasta LIKE %:filtro% " +
             "OR su.titulo_subasta LIKE %:filtro% " +

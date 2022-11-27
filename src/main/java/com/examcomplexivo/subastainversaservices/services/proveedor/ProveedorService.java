@@ -13,6 +13,8 @@ public interface ProveedorService {
 
     Optional<Proveedor> findByEmail(String email);
 
+    Optional<Proveedor> findByTelefono(String telefono);
+
     Optional<Proveedor> findById(Long id);
 
     List<Proveedor> findByFiltros(String filtro);

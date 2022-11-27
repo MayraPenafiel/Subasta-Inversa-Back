@@ -24,8 +24,8 @@ public class Oferta implements Serializable {
 
     @Column(name = "fecha_oferta")
     private Date fecha;
-    @Column(name = "descripcion_oferta")
-    private String descripcion_oferta;
+    @Column(name = "comentario_calificacion_oferta")
+    private String comentario_calificacion_oferta;
     @Column(name = "estado_oferta")
     private boolean estado;
     @Column(name = "calificacion_oferta")
