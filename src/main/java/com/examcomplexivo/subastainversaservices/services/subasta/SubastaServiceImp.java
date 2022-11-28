@@ -17,7 +17,6 @@ public class SubastaServiceImp implements SubastaService {
     private SubastaRepository repository;
 
     @Override
-    @Transactional(readOnly = true)
     public List<Subasta> listar() {
         return (List<Subasta>) repository.findAll();
     }

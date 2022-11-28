@@ -26,7 +26,7 @@ public class SubastaController {
     @Autowired
     private SubastaService subastaService;
 
-    @GetMapping("listar")
+    @GetMapping("listar/todo")
     public List<Subasta> listar() {
         return subastaService.listar();
     }
