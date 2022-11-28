@@ -51,9 +51,10 @@ public class OfertaController {
     }
 
     @PutMapping("/editar/{idOferta}")
-    @PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
+    //@PreAuthorize("hasAnyRole('ADMIN','PROVEEDOR')")
     public ResponseEntity<?> editarOderta(@PathVariable(name = "idOferta", required = true)Long idOferta,
                                           @RequestBody Oferta oferta){
+        System.out.println(idOferta);
         try{
             if (ofertaService.findById(idOferta).isPresent()){
                 oferta.setIdOferta(idOferta);
